@@ -1,1 +1,0 @@
-/etc/sistema_presenca/codigo-c
