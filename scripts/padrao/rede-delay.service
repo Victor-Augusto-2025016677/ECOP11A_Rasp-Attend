@@ -1,0 +1,12 @@
+[Unit]
+Description=Rede Delay Setup
+After=network.target
+Wants=network.target
+
+[Service]
+ExecStart=/usr/local/bin/rede-delay.sh
+Type=oneshot
+RemainAfterExit=true
+
+[Install]
+WantedBy=multi-user.target
