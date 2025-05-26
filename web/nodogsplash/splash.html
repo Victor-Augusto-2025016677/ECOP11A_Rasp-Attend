@@ -1,0 +1,163 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<title>Registro de Presença</title>
+<style>
+  body {
+    background: linear-gradient(135deg, #4e54c8, #8f94fb);
+    color: #fff;
+    font-family: 'Segoe UI', Arial, sans-serif;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    height: 100vh;
+    margin: 0;
+  }
+  .container {
+    background: rgba(0,0,0,0.3);
+    padding: 40px 30px;
+    border-radius: 16px;
+    box-shadow: 0 4px 24px rgba(0,0,0,0.2);
+    text-align: center;
+    min-width: 320px;
+  }
+  h1 {
+    margin-bottom: 18px;
+    font-size: 2rem;
+    font-weight: 600;
+  }
+  label {
+    display: block;
+    margin-bottom: 8px;
+    font-weight: 500;
+    text-align: left;
+  }
+  input[type="text"] {
+    width: 90%;
+    padding: 10px;
+    border-radius: 8px;
+    border: none;
+    margin-bottom: 16px;
+    font-size: 1rem;
+    background: rgba(255,255,255,0.15);
+    color: #fff;
+    outline: none;
+    transition: background 0.2s;
+  }
+  input[type="text"]:focus {
+    background: rgba(255,255,255,0.25);
+  }
+  #erro {
+    color: #ffbaba;
+    background: rgba(255,0,0,0.08);
+    border-radius: 6px;
+    padding: 6px 0;
+    min-height: 22px;
+    display: block;
+    margin-bottom: 10px;
+    font-size: 1rem;
+    font-weight: 500;
+  }
+  #enviar {
+    background: linear-gradient(90deg, #4e54c8, #8f94fb);
+    color: #fff;
+    border: none;
+    border-radius: 8px;
+    padding: 12px 32px;
+    font-size: 1.1rem;
+    font-weight: 600;
+    cursor: pointer;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.12);
+    transition: background 0.2s, transform 0.1s;
+    margin: 8px 0;
+  }
+  #enviar:hover {
+    background: linear-gradient(90deg, #8f94fb, #4e54c8);
+    transform: translateY(-2px) scale(1.03);
+  }
+</style>
+</head>
+<body>
+  <div class="container">
+    <h1>Registro de Presença</h1>
+    <form id="nodogSplashForm" method="GET" action="$authtarget">
+<label for="nome">Nome:</label>
+      <input type="text" name="username" id="nome" autocomplete="off" required>
+
+      <label for="matricula">Matrícula (10 dígitos):</label>
+      <input type="text" id="matricula" name="password" maxlength="10" pattern="\d{10}" title="A matrícula deve conter exatamente 10 dígitos numéricos." autocomplete="off" required>
+      <span id="erro"></span>
+
+      <input type="hidden" name="tok" value="$tok">
+      <input type="hidden" name="redir" value="$redir">
+      <input type="submit" id="enviar" value="Continuar">
+    </form>
+  </div>
+
+  <script>
+    const form = document.getElementById("nodogSplashForm");
+    const nomeInput = document.getElementById("nome");
+    const matriculaInput = document.getElementById("matricula");
+    const erroSpan = document.getElementById("erro");
+
+    form.addEventListener("submit", function (e) {
+      // Limpa erros anteriores
+      erroSpan.textContent = "";
+
+      // Validação do nome (simples, apenas para verificar se não está vazio)
+      if (nomeInput.value.trim() === "") {
+        e.preventDefault(); // Impede o envio do formulário
+        erroSpan.textContent = "Por favor, insira seu nome.";
+        nomeInput.focus();
+        return;
+      }
+
+      // Validação da matrícula
+      const matriculaValue = matriculaInput.value;
+      // A validação de 10 dígitos e de ser numérico pode ser feita pelo atributo 'pattern' e 'maxlength' do HTML5,
+      // mas uma verificação adicional em JS é uma boa prática.
+      if (!/^\d{10}$/.test(matriculaValue)) {
+        e.preventDefault(); // Impede o envio do formulário
+        erroSpan.textContent = "Matrícula deve ter 10 dígitos numéricos.";
+        matriculaInput.focus();
+        return;
+      }
+
+      // Validação do ano da matrícula (opcional, mas você tinha antes)
+      const ano = parseInt(matriculaValue.slice(0, 4), 10);
+      const anoAtual = new Date().getFullYear();
+
+      if (isNaN(ano) || ano > anoAtual || ano < 1913) { // Ajuste o ano mínimo conforme necessário
+        e.preventDefault(); // Impede o envio do formulário
+        erroSpan.textContent = "Ano de matrícula inválido (primeiros 4 dígitos).";
+        matriculaInput.focus();
+        return;
+      }
+
+      // Se todas as validações passarem, o formulário será enviado NATURALMENTE via GET.
+      // Não é necessário e.preventDefault() aqui nem fetch.
+      // O navegador construirá a URL com nome_usuario, numero_usuario, tok e redir.
+      // Exemplo de mensagem de sucesso (opcional, pois a página será redirecionada)
+      // erroSpan.textContent = "Registrando... Por favor, aguarde.";
+      // erroSpan.style.color = "#baffba"; // Verde para sucesso
+    });
+
+    // Limpar erro ao digitar na matrícula
+    matriculaInput.addEventListener("input", function () {
+      // Limpa o erro específico da matrícula se o usuário começar a corrigir
+      if (erroSpan.textContent.includes("Matrícula") || erroSpan.textContent.includes("Ano")) {
+        erroSpan.textContent = "";
+      }
+    });
+
+    // Limpar erro ao digitar no nome
+    nomeInput.addEventListener("input", function () {
+      if (erroSpan.textContent.includes("nome")) {
+        erroSpan.textContent = "";
+      }
+    });
+  </script>
+</body>
+</html>

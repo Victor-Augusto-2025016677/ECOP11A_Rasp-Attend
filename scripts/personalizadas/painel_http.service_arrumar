@@ -1,0 +1,17 @@
+[Unit]
+Description=Servidor HTTP Python para Painel de Presenca
+After=network.target
+
+
+
+[Service]
+Type=simple
+WorkingDirectory=/home/victo/codigo-c/htdocs/
+ExecStart=/usr/bin/python3 -m http.server 88 --bind 10.3.141.1
+Restart=on-failure
+RestartSec=5
+
+
+
+[Install]
+WantedBy=multi-user.target

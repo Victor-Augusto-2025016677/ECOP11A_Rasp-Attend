@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<title>Painel de Presença</title>
+<link rel="stylesheet" href="painel_presenca.css">
+</head>
+<body>
+
+  <div class="container" id="mainContainer" style="max-width: 1100px;"> <div id="contentSection"> <span id="settingsGear" title="Configurações">⚙️</span>
+      <h1>CONTROLE DE PRESENÇA</h1>
+      <div id="dataTableContainer">
+        <p class="loading-message">Carregando dados...</p>
+      </div>
+      <p id="lastUpdated" style="font-size: 0.8rem; margin-top: 15px; text-align: right;"></p>
+    </div>
+  </div>
+
+  <div id="settingsModal" class="modal">
+    <div class="modal-content">
+        <span class="close-button" id="closeSettingsModal" title="Fechar">&times;</span>
+        <h2>Configurações de Aula</h2>
+        <form id="settingsForm">
+            <div class="form-group">
+                <label for="aulaDuracao">Duração de 1 aula (minutos):</label>
+                <input type="number" id="aulaDuracao" name="aulaDuracao" min="1" max="180" required>
+            </div>
+            <div class="form-group">
+                <label for="quantidadeAulas">Quantidade de aulas:</label>
+                <input type="number" id="quantidadeAulas" name="quantidadeAulas" min="1" max="8" required>
+            </div>
+            <div class="form-group">
+                <label for="percentualMinimo">Porcentagem mínima para presença (%):</label>
+                <input type="number" id="percentualMinimo" name="percentualMinimo" min="0" max="100" step="1" required>
+            </div>
+            <button type="submit" class="action-button">Salvar Configurações</button>
+        </form>
+    </div>
+  </div>
+
+  <script src="painel_presenca.js"></script>
+</body>
+</html>

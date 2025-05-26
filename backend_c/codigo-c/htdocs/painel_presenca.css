@@ -1,0 +1,255 @@
+body {
+  background: linear-gradient(135deg, #4e54c8, #8f94fb);
+  color: #fff;
+  font-family: 'Segoe UI', Arial, sans-serif;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: flex-start; /* Alinhado ao topo */
+  min-height: 100vh;
+  margin: 0;
+  padding: 20px;
+  box-sizing: border-box;
+}
+.container {
+  background: rgba(0,0,0,0.3);
+  padding: 20px 25px;
+  border-radius: 16px;
+  box-shadow: 0 4px 24px rgba(0,0,0,0.2);
+  text-align: center;
+  width: 100%;
+  max-width: 1100px;
+  min-width: 300px;
+  box-sizing: border-box;
+  margin-top: 20px;
+  position: relative;
+}
+h1 {
+  margin-top: 0;
+  margin-bottom: 20px;
+  font-size: 1.8rem;
+  font-weight: 600;
+}
+label {
+  display: block;
+  margin-bottom: 8px;
+  font-weight: 500;
+  text-align: left;
+  font-size: 0.95rem;
+}
+input[type="password"],
+.modal-content input[type="number"] {
+  width: 100%;
+  padding: 12px;
+  border-radius: 8px;
+  border: 1px solid rgba(255,255,255,0.2);
+  margin-bottom: 10px;
+  font-size: 1rem;
+  background: rgba(255,255,255,0.1);
+  color: #fff;
+  box-sizing: border-box;
+  outline: none;
+  transition: background 0.2s, border-color 0.2s;
+}
+input[type="password"]::placeholder {
+  color: rgba(255,255,255,0.6);
+}
+input[type="password"]:focus,
+.modal-content input[type="number"]:focus {
+  background: rgba(255,255,255,0.15);
+  border-color: #8f94fb;
+}
+.error-message {
+  color: #ffbaba;
+  background: rgba(255, 20, 20, 0.12);
+  border-radius: 6px;
+  padding: 8px 10px;
+  min-height: 20px;
+  display: block;
+  margin-bottom: 12px;
+  font-size: 0.9rem;
+  font-weight: 500;
+  line-height: 1.4;
+}
+.action-button {
+  background: linear-gradient(90deg, #4e54c8, #8f94fb);
+  color: #fff;
+  border: none;
+  border-radius: 8px;
+  padding: 12px 28px;
+  font-size: 1.05rem;
+  font-weight: 600;
+  cursor: pointer;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.12);
+  transition: background 0.2s, transform 0.1s;
+  margin-top: 10px;
+  width: 100%;
+  box-sizing: border-box;
+}
+.action-button:hover {
+  background: linear-gradient(90deg, #8f94fb, #4e54c8);
+  transform: translateY(-2px);
+}
+#contentSection h1 {
+  font-size: 2rem;
+  margin-right: 50px;
+}
+
+/* Tabela de dados */
+#dataTableContainer { margin-top: 25px; overflow-x: auto; }
+table { width: 100%; border-collapse: collapse; font-size: 0.85rem; }
+th, td { border: 1px solid rgba(255,255,255,0.2); padding: 10px 12px; text-align: left; vertical-align: middle; }
+th { background-color: rgba(255,255,255,0.1); font-weight: 600; }
+td.status-ativo { color: #c8e6c9; font-weight: bold; }
+td.status-inativo { color: #ffccbc; }
+.loading-message, .error-loading-message { margin-top: 15px; font-style: italic; }
+
+/* Linha expansível */
+.expander-column-header { width: 30px; padding: 10px 5px !important; text-align: center !important; }
+.expander-cell { text-align: center !important; padding: 10px 5px !important; }
+.expander-arrow { display: inline-block; padding: 5px; font-size: 0.9em; user-select: none; cursor: pointer; }
+.details-row td { padding: 0 !important; border: none; border-bottom: 1px solid rgba(255,255,255,0.2); }
+.details-content-wrapper { padding: 10px 15px 15px 45px; background-color: rgba(0,0,0,0.15); }
+.details-content-wrapper strong { display: block; margin-bottom: 8px; font-size: 0.95em; }
+.details-content-wrapper ul { list-style-type: none; padding-left: 0; margin: 0; }
+.details-content-wrapper li { padding: 5px 0; font-size: 0.9em; border-bottom: 1px dotted rgba(255,255,255,0.15); }
+.details-content-wrapper li:last-child { border-bottom: none; }
+
+#settingsGear {
+  position: absolute;
+  top: 22px;
+  right: 25px;
+  font-size: 1.7em;
+  cursor: pointer;
+  padding: 5px;
+  transition: transform 0.3s ease-in-out;
+  z-index: 10;
+}
+#settingsGear:hover {
+  transform: rotate(60deg);
+}
+.modal {
+  display: none;
+  position: fixed;
+  z-index: 1000;
+  left: 0;
+  top: 0;
+  width: 100%;
+  height: 100%;
+  overflow: auto;
+  background-color: rgba(0,0,0,0.7);
+  padding-top: 60px;
+}
+.modal-content {
+  background-color: #3a3f68;
+  color: #fff;
+  margin: 5% auto;
+  padding: 25px 30px;
+  border: 1px solid rgba(255,255,255,0.2);
+  width: 90%;
+  max-width: 450px;
+  border-radius: 12px;
+  box-shadow: 0 8px 25px rgba(0,0,0,0.4);
+  position: relative;
+  text-align: left;
+}
+.modal-content h2 {
+  margin-top: 0;
+  margin-bottom: 20px;
+  color: #fff;
+  text-align: center;
+  font-size: 1.5rem;
+}
+.modal-content .form-group {
+    margin-bottom: 18px;
+}
+.modal-content .close-button {
+  color: #ccc;
+  position: absolute;
+  top: 10px;
+  right: 15px;
+  font-size: 30px;
+  font-weight: bold;
+  transition: color 0.2s;
+}
+.modal-content .close-button:hover,
+.modal-content .close-button:focus {
+  color: #fff;
+  text-decoration: none;
+  cursor: pointer;
+}
+.modal-content .action-button {
+  margin-top: 20px;
+}
+
+/* --- AJUSTES DE RESPONSIVIDADE PARA A TABELA --- */
+@media screen and (max-width: 768px) {
+  table {
+    font-size: 0.8rem; /* Reduz um pouco a fonte da tabela */
+  }
+  th, td {
+    padding: 8px 6px; /* Reduz o padding das células */
+  }
+  .details-content-wrapper {
+    padding: 8px 10px 10px 35px; /* Ajusta padding dos detalhes */
+  }
+  .details-content-wrapper li {
+    font-size: 0.85em;
+  }
+  #contentSection h1 {
+    font-size: 1.8rem; /* Ajusta o título principal */
+  }
+  .container {
+    padding: 15px 20px; /* Ajusta padding do container */
+  }
+}
+
+@media screen and (max-width: 600px) {
+  .container {
+    padding: 15px 10px; /* Menos padding no container geral */
+     margin-top: 10px;
+  }
+  th, td {
+    padding: 6px 4px; /* Padding ainda menor */
+  }
+  table {
+    font-size: 0.75rem; /* Fonte da tabela ainda menor */
+  }
+
+  /* Oculta colunas menos críticas como exemplo */
+  /* As classes são geradas a partir dos nomes dos cabeçalhos do CSV, ex: "Nome_Usuario" vira ".col-nome_usuario" */
+  .col-primeira_conexao_geral_ts, /* Nome da classe gerado a partir de "Primeira_Conexao_Geral_TS" */
+  .col-numero_de_sessoes {       /* Nome da classe gerado a partir de "Numero_De_Sessoes" */
+    display: none;
+  }
+
+  .expander-column-header,
+  .expander-cell {
+    width: 25px;
+    padding: 8px 2px !important;
+  }
+  .expander-arrow {
+    font-size: 0.8em;
+  }
+
+  #contentSection h1 {
+    font-size: 1.5rem;
+    margin-top: 5px; /* Reduz margem superior do título */
+    margin-bottom: 15px; /* Reduz margem inferior do título */
+    margin-right: 40px; /* Mantém espaço para engrenagem */
+  }
+  #settingsGear {
+    font-size: 1.5em;
+    top: 15px;
+    right: 10px;
+  }
+  .details-content-wrapper {
+    padding: 8px 10px 10px 30px;
+  }
+  .details-content-wrapper li {
+    font-size: 0.8em;
+  }
+  #lastUpdated {
+      font-size: 0.7rem; /* Reduz fonte do "Última atualização" */
+  }
+}

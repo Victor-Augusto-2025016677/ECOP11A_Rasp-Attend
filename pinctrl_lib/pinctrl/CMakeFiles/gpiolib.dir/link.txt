@@ -1,0 +1,2 @@
+/usr/bin/ar qc libgpiolib.a CMakeFiles/gpiolib.dir/gpiolib.c.o CMakeFiles/gpiolib.dir/util.c.o CMakeFiles/gpiolib.dir/library_gpiochips.c.o CMakeFiles/gpiolib.dir/gpiochip_bcm2835.c.o CMakeFiles/gpiolib.dir/gpiochip_bcm2712.c.o CMakeFiles/gpiolib.dir/gpiochip_rp1.c.o
+/usr/bin/ranlib libgpiolib.a

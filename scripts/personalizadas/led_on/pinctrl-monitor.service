@@ -1,0 +1,14 @@
+[Unit]
+Description=Monitoramento de pinctrl baseado em status de serviços
+After=multi-user.target
+Wants=multi-user.target
+
+[Service]
+ExecStart=/usr/local/bin/pinctrl-monitor.sh
+Restart=always
+RestartSec=10
+Type=simple
+ExecStop=/usr/local/bin/shutdown_pins.sh
+
+[Install]
+WantedBy=multi-user.target

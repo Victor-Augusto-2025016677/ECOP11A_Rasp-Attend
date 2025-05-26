@@ -1,0 +1,14 @@
+[Unit]
+Description=Monitoramento de temperatura para controle do GPIO 16
+After=multi-user.target
+Wants=multi-user.target
+
+[Service]
+ExecStart=/usr/local/bin/temp-monitor.sh
+Restart=always
+RestartSec=10
+Type=simple
+ExecStop=/usr/local/bin/shutdown_pins.sh
+
+[Install]
+WantedBy=multi-user.target

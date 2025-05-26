@@ -1,0 +1,2 @@
+/etc/nodogsplash/htdocs/splash.html
+/etc/nodogsplash/htdocs/status.html

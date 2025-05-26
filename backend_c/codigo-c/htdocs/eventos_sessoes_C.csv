@@ -1,0 +1,4 @@
+"Timestamp_Evento","MAC_Cliente","Nome_Usuario","Matricula","Tipo_Evento"
+"2025-05-26 04:51:34","1a:bc:de:6c:8e:4b","Victor Augusto","2025016677","CONECTADO"
+"2025-05-26 04:59:35","1a:bc:de:6c:8e:4b","Victor Augusto","2025016677","DESCONECTADO"
+"2025-05-26 05:00:36","1a:bc:de:6c:8e:4b","Victor Augusto","2025016677","CONECTADO"

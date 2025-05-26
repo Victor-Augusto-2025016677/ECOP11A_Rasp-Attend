@@ -1,7 +1,5 @@
 #!/bin/bash
 
-# Script para definir um ip estático na interface wlan0 (AP), e reiniciar serviços de rede e AP, E exibir animações de execução com leds.
-
 pinctrl set 2,3,4,17,27,22,10,9,11,5,6,13 op dl
 
 pinctrl set 4,17,10,6 op dh
@@ -44,28 +42,15 @@ rm -f "$MONITOR_ACTIVITY_ERROR_LOG"
 
 systemctl restart nodogsplash
 
-sleep 10
-
 pinctrl set 2 op dh
-
-sleep 1
-
+sleep 0.5
 pinctrl set 2 op dl
-
 pinctrl set 27 op dh
-
-sleep 1
-
+sleep 0.5
 pinctrl set 27 op dl
-
 pinctrl set 9 op dh
-
-sleep 1
-
+sleep 0.5
 pinctrl set 9 op dl
-
 pinctrl set 5 op dh
-
-sleep 1
-
+sleep 0.5
 pinctrl set 2,3,4,17,27,22,10,9,11,5,6,26 op dl

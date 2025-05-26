@@ -1,0 +1,1 @@
+/usr/bin/cc  -Wall -Wextra -Werror -pedantic CMakeFiles/pinctrl.dir/pinctrl.c.o -o pinctrl  libgpiolib.a 

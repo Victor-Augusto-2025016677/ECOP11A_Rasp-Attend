@@ -53,8 +53,15 @@ sudo ./install_base.sh
 
 Este comando executa a instalação personalizada do RaspAP, a instalação do Nodogsplash e suas dependências e a atualização da configuração do nodogsplash
 
+Após a conclusão, o sistema irá se comportar com as definições padrão do RaspAP, junto ao captive portal padrão, para mais informações, consulte:
+
+[RaspAP](https://raspap.com/)
+[Captive_Portal](https://docs.raspap.com/captive/#starting-the-captive-portal)
+
+*Infelizmente a documentação oficial do "Nodogsplash" se encontra indisponivel, para a realização de consultas parciais, recomendo o uso de Modelos LLM treinados antes de sua indisponibilidade (GPT, Gemini, Claude e etc)
+
 4. Aplicação da personalização central
 
 Este comando, irá realizar toda a instalação da personalização realizada por mim, ela consiste em página de login com recolhimento de nome e número de matrícula, scripts e services para a hospedagem local http, e a solução em Ansi C para a manipulação de csv's e outras implicações para o funcionamento do código. 
 
-**Em andamento**
+### **Em andamento**

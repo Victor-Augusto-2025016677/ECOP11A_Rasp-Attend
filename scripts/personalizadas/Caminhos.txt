@@ -1,0 +1,12 @@
+/etc/systemd/system/pinctrl-monitor.service
+/usr/local/bin/pinctrl-monitor.sh
+
+/etc/systemd/system/temp-monitor.service
+/usr/local/bin/temp-monitor.sh
+
+/etc/systemd/system/rede-delay.service
+/usr/local/bin/rede-delay.sh
+
+/etc/systemd/system/painel_http.service
+
+/etc/systemd/system/backendc1.service

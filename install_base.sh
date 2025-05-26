@@ -21,7 +21,7 @@ echo "============================================="
 echo -e "\n>>> [1/5] Atualizando pacotes e instalando dependência (libmicrohttpd-dev)"
 sudo apt-get update
 
-sudo apt-get install -y libmicrohttpd-dev
+sudo apt-get install -y libmicrohttpd-dev cmake
 echo ">>> Dependências instaladas."
 
 echo -e "\n>>> [2/5] Instalando RaspAP (Modo Mínimo)"

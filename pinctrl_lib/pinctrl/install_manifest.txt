@@ -1,0 +1,4 @@
+/usr/local/bin/pinctrl
+/usr/local/lib/libgpiolib.a
+/usr/local/include/gpiolib.h
+/usr/local/share/bash-completion/completions/pinctrl

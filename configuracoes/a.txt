@@ -1,0 +1,7 @@
+hostapd
+dnsmasq
+nodogsplash
+
+/etc/dnsmasq.d/090_wlan0.conf
+/etc/nodogsplash/nodogsplash.conf
+/etc/hostapd/hostapd.conf
