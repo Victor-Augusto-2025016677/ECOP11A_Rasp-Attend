@@ -74,7 +74,7 @@ echo "============================================="
 echo "Configurando NODOGSPLASH - PADRÃO (FASE 2)"
 echo "============================================="
 
-CONFIG_FONTE="configuracoes\padrao\nodogsplash.conf"
+CONFIG_FONTE="configuracoes/padrao/nodogsplash.conf"
 CONFIG_DESTINO="/etc/nodogsplash/nodogsplash.conf"
 
 echo -e "\n>>> [1/3] Aplicando configuração do NoDogSplash..."
@@ -102,7 +102,7 @@ echo "============================================="
 echo "Configurando Delay de Rede (correção automática) - NECESSÁRIO (FASE 3)"
 echo "============================================="
 
-CONFIG_FONTE1="scripts\padrao\rede-delay.sh"
+CONFIG_FONTE1="scripts/padrao/rede-delay.sh"
 CONFIG_DESTINO1="/usr/local/bin/rede-delay.sh"
 
 echo -e "\n>>> [1/3] Copiando script de delay de rede..."
@@ -115,7 +115,7 @@ fi
 sudo cp "$CONFIG_FONTE1" "$CONFIG_DESTINO1"
 echo ">>> Script delay de rede copiado."
 
-CONFIG_FONTE2="scripts\padrao\rede-delay.service"
+CONFIG_FONTE2="scripts/padrao/rede-delay.service"
 CONFIG_DESTINO2="/etc/systemd/system/rede-delay.service"
 
 echo -e "\n>>> [2/3] Copiando serviço de delay de rede..."

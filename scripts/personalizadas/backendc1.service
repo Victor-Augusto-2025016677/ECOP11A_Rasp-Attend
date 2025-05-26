@@ -4,7 +4,7 @@ After=network.target nodogsplash.service
 
 [Service]
 Type=simple
-ExecStart=/home/victo/codigo-c/bin/monitor_c
+ExecStart=/etc/sistema_presenca/codigo-c/bin/monitor_c
 User=root
 Group=root
 Restart=always

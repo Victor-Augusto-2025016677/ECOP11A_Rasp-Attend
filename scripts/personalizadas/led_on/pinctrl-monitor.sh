@@ -1,16 +1,17 @@
 #!/bin/bash
 
-sleep 20
-pinctrl set 2,3,4,17,27,22,10,9,11,5,6,26,16 op dl
+sleep 30
+pinctrl set 2,3,4,17,27,22,10,9,11,5,6,26 op dl
 
-pinctrl set 4,17,10,6 op dh
+pinctrl set 3,22,11,26 dh
 sleep 0.5
-pinctrl set 4,17,10,6 op dl
+pinctrl set 3,22,11,26 dl && pinctrl set 2,27,9,5 dh
 sleep 0.5
-pinctrl set 4,17,10,6 op dh
+pinctrl set 2,27,9,5 dl && pinctrl set 4,17,10,6 dh
 sleep 0.5
-pinctrl set 4,17,10,6 op dl
+pinctrl set 2,3,4,17,27,22,10,9,11,5,6,26 dl
 
+sleep 5
 
 while true; do
 

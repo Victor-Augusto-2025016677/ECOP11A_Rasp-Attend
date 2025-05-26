@@ -6,7 +6,7 @@ After=network.target
 
 [Service]
 Type=simple
-WorkingDirectory=/home/victo/codigo-c/htdocs/
+WorkingDirectory=/etc/sistema_presenca/codigo-c/htdocs/
 ExecStart=/usr/bin/python3 -m http.server 88 --bind 10.3.141.1
 Restart=on-failure
 RestartSec=5

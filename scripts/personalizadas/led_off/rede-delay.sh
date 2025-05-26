@@ -16,13 +16,13 @@ systemctl restart dnsmasq
 
 systemctl restart hostapd
 
-CSV_BINAUTH_LOG="home/victo/codigo-c/csv/c_macs_efetivamente_ativos_anterior.txt"
+CSV_BINAUTH_LOG="/etc/sistema_presenca/codigo-c/csv/c_macs_efetivamente_ativos_anterior.txt"
 
-CSV_ACTIVITY_LOG="home/victo/codigo-c/csv/eventos_sessoes_C.csv"
+CSV_ACTIVITY_LOG="/etc/sistema_presenca/codigo-c/csv/eventos_sessoes_C.csv"
 
-CSV_ACTIVITY_LOG1="home/victo/codigo-c/htdocs/eventos_sessoes_C.csv"
+CSV_ACTIVITY_LOG1="/etc/sistema_presenca/codigo-c/htdocs/eventos_sessoes_C.csv"
 
-MAIN_BINAUTH_DETAILS_LOG="/home/victo/codigo-c/htdocs/relatorio_usuarios_C.csv"
+MAIN_BINAUTH_DETAILS_LOG="/etc/sistema_presenca/codigo-c/htdocs/relatorio_usuarios_C.csv"
 
 MONITOR_ACTIVITY_ERROR_LOG="/tmp/nodogsplash_debug/monitor_atividade.error.log"
 

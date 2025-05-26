@@ -9,10 +9,11 @@
 #include <unistd.h>
 
 const char* BINAUTH_CSV_PATH = "/tmp/nodogsplash_debug/dados_completos.csv";
-const char* C_PROJECT_CSV_DIR = "/home/victo/codigo-c/csv";
-const char* EVENTS_LOG_CSV_PATH = "/home/victo/codigo-c/csv/eventos_sessoes_C.csv";
-const char* EFFECTIVELY_ACTIVE_MACS_FILE_PATH = "/home/victo/codigo-c/csv/c_macs_efetivamente_ativos_anterior.txt";
-const char* UPTIME_REPORT_CSV_PATH = "/home/victo/codigo-c/htdocs/relatorio_usuarios_C.csv";
+
+const char* C_PROJECT_CSV_DIR = "/etc/sistema_presenca/codigo-c/csv";
+const char* EVENTS_LOG_CSV_PATH = "/etc/sistema_presenca/codigo-c/csv/eventos_sessoes_C.csv";
+const char* EFFECTIVELY_ACTIVE_MACS_FILE_PATH = "/etc/sistema_presenca/codigo-c/csv/c_macs_efetivamente_ativos_anterior.txt";
+const char* UPTIME_REPORT_CSV_PATH = "/etc/sistema_presenca/codigo-c/htdocs/relatorio_usuarios_C.csv";
 
 const char* HEADER_EVENTS_LOG_CSV = "\"Timestamp_Evento\",\"MAC_Cliente\",\"Nome_Usuario\",\"Matricula\",\"Tipo_Evento\"\n";
 const char* HEADER_UPTIME_REPORT_CSV = "\"MAC_Cliente\",\"Nome_Usuario\",\"Matricula\",\"Primeira_Conexao_Geral_TS\",\"Ultimo_Evento_Registrado_TS\",\"Status_Atual_Inferido\",\"Total_Uptime_Segundos\",\"Numero_De_Sessoes\"\n";
@@ -21,7 +22,7 @@ const char* HEADER_UPTIME_REPORT_CSV = "\"MAC_Cliente\",\"Nome_Usuario\",\"Matri
 #define MAC_LEN 18
 #define NAME_LEN 100
 #define MATRICULA_LEN 20
-#define TIMESTAMP_LEN 80 // Aumentado para garantir espaço
+#define TIMESTAMP_LEN 80
 #define EVENT_TYPE_LEN 20
 
 typedef struct MACNode {
@@ -83,8 +84,8 @@ void executar_calculo_uptime_geral();
 time_t timestamp_str_para_epoch(const char* timestamp_str);
 
 int copiar_arquivo_csv() {
-    const char *origem = "/home/victo/codigo-c/csv/eventos_sessoes_C.csv";
-    const char *destino = "/home/victo/codigo-c/htdocs/eventos_sessoes_C.csv";
+    const char *origem = "/etc/sistema_presenca/codigo-c/csv/eventos_sessoes_C.csv";
+    const char *destino = "/etc/sistema_presenca/codigo-c/htdocs/eventos_sessoes_C.csv";
     FILE *src = fopen(origem, "rb");
     FILE *dst = fopen(destino, "wb");
     if (!src || !dst) {
@@ -110,7 +111,6 @@ int main() {
     char command_mkdir[256];
     snprintf(command_mkdir, sizeof(command_mkdir), "mkdir -p %s", C_PROJECT_CSV_DIR);
     if (system(command_mkdir) != 0) {
-        // Silencioso
     }
 
     FILE* fp_touch_active_macs = fopen(EFFECTIVELY_ACTIVE_MACS_FILE_PATH, "a");
@@ -118,7 +118,7 @@ int main() {
         fclose(fp_touch_active_macs);
     }
 
-    char ts_buf[TIMESTAMP_LEN]; // Buffer declarado aqui!
+    char ts_buf[TIMESTAMP_LEN];
     time_t t_now;
 
     while (1) {
