@@ -64,4 +64,9 @@ Após a conclusão, o sistema irá se comportar com as definições padrão do R
 
 Este comando, irá realizar toda a instalação da personalização realizada por mim, ela consiste em página de login com recolhimento de nome e número de matrícula, scripts e services para a hospedagem local http, e a solução em Ansi C para a manipulação de csv's e outras implicações para o funcionamento do código. 
 
+```bash
+
+sudo ./install_personalizacao.sh
+
+```
 ### **Em andamento**
