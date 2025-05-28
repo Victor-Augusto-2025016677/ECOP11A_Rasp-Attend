@@ -3,6 +3,8 @@
 # Define o diretório raiz do repositório
 REPO_ROOT=$(pwd)
 
+# --- Funções Auxiliares ---
+
 # Função para fazer perguntas Sim/Não
 ask_yes_no() {
     while true; do
@@ -10,70 +12,98 @@ ask_yes_no() {
         case $sn in
             [Ss]* ) return 0;; # Sim
             [Nn]* ) return 1;; # Não
-            * ) echo "Por favor, responda com 's' para sim ou 'n' para não.";;
+            * ) echo "   ATENÇÃO: Por favor, responda com 's' para sim ou 'n' para não.";;
         esac
     done
 }
 
+# Função para exibir cabeçalho de seção
+print_section_header() {
+    echo
+    echo "================================================="
+    echo " $1"
+    echo "================================================="
+    echo
+}
+
+# Função para exibir mensagem de sucesso
+print_success() {
+    echo "   SUCESSO: $1"
+}
+
+# Função para exibir mensagem de erro
+print_error() {
+    echo "   ERRO: $1"
+}
+
+# Função para exibir mensagem de informação
+print_info() {
+    echo "   INFO: $1"
+}
+
+# Função para exibir mensagem de aviso
+print_warning() {
+    echo "   AVISO: $1"
+}
+
+# Função para exibir etapa de progresso
+print_step() {
+    echo "   PASSO: $1..."
+}
+
 # --- Início da Instalação ---
-echo "================================================="
-echo " Início da Instalação e Configuração da Solução"
-echo "================================================="
-echo
+clear # Limpa a tela para uma melhor visualização
+print_section_header "Início da Instalação e Configuração da Solução"
 
 # --- Escolhas do Usuário ---
-
-echo "Serão oferecidas algumas opções de personalização."
-echo "Mais informações sobre cada serviço podem ser encontradas na pasta /docs."
+echo "Serão oferecidas algumas opções de personalização para a sua instalação."
+echo "Mais informações sobre cada serviço podem ser encontradas na pasta /docs do repositório."
 echo
 
 # Pergunta sobre Leds Automáticos
 if ask_yes_no "Deseja instalar o serviço de LEDs automáticos para status?"; then
     INSTALL_LEDS=true
-    echo "  >> Serviço de LEDs será instalado."
+    print_success "Serviço de LEDs será instalado."
 else
     INSTALL_LEDS=false
-    echo "  >> Serviço de LEDs NÃO será instalado."
+    print_info "Serviço de LEDs NÃO será instalado."
 fi
 echo
 
 # Pergunta sobre Ventoinha
 if ask_yes_no "Deseja instalar o serviço de ventoinha para refrigeração?"; then
     INSTALL_FAN=true
-    echo "  >> Serviço de ventoinha será instalado."
+    print_success "Serviço de ventoinha será instalado."
 else
     INSTALL_FAN=false
-    echo "  >> Serviço de ventoinha NÃO será instalado."
+    print_info "Serviço de ventoinha NÃO será instalado."
 fi
 echo
 
 # --- Instalação da Biblioteca pinctrl (se necessário) ---
-
 if [ "$INSTALL_LEDS" = true ] || [ "$INSTALL_FAN" = true ]; then
-    echo ">>> Iniciando a instalação da biblioteca 'pinctrl' (necessária para LEDs e/ou Ventoinha)..."
+    print_section_header "Instalando Biblioteca 'pinctrl'"
+    print_step "Iniciando a instalação da biblioteca 'pinctrl' (necessária para LEDs e/ou Ventoinha)"
     PINCTRL_SCRIPT="$REPO_ROOT/pinctrl_lib/pinctrl_install.sh"
 
     if [ ! -f "$PINCTRL_SCRIPT" ]; then
-        echo "    ERRO: Arquivo '$PINCTRL_SCRIPT' não encontrado!"
+        print_error "Arquivo '$PINCTRL_SCRIPT' não encontrado! Verifique o caminho e tente novamente."
         exit 1
     fi
 
     sudo chmod +x "$PINCTRL_SCRIPT"
     if sudo "$PINCTRL_SCRIPT"; then
-        echo ">>> Biblioteca 'pinctrl' instalada com sucesso."
+        print_success "Biblioteca 'pinctrl' instalada com sucesso."
     else
-        echo "    ERRO: Falha ao instalar a biblioteca 'pinctrl'."
+        print_error "Falha ao instalar a biblioteca 'pinctrl'. Verifique os logs acima para mais detalhes."
         exit 2
     fi
     echo
 fi
 
-# --- Instalação do Serviço de LEDs (se escolhido) ---
-
+# --- Instalação do Serviço de LEDs ---
 if [ "$INSTALL_LEDS" = true ]; then
-    echo "========================================="
-    echo " Iniciando a Instalação do Serviço de LEDs"
-    echo "========================================="
+    print_section_header "Instalando Serviço de LEDs"
 
     CONFIG_FONTE1="$REPO_ROOT/scripts/personalizadas/led_on/pinctrl-monitor.sh"
     CONFIG_DESTINO1="/usr/local/bin/pinctrl-monitor.sh"
@@ -84,176 +114,260 @@ if [ "$INSTALL_LEDS" = true ]; then
     CONFIG_FONTE6="$REPO_ROOT/scripts/personalizadas/led_on/rede-delay.sh"
     CONFIG_DESTINO6="/usr/local/bin/rede-delay.sh"
 
-    echo ">>> [1/6] Verificando arquivos necessários..."
+    print_step "[1/6] Verificando arquivos necessários para o serviço de LEDs"
     if [ ! -f "$CONFIG_FONTE1" ] || [ ! -f "$CONFIG_FONTE2" ] || [ ! -f "$CONFIG_FONTE5" ] || [ ! -f "$CONFIG_FONTE6" ]; then
-        echo "    ERRO: Um ou mais arquivos do serviço de LEDs não foram encontrados! Certifique-se de executar da pasta do repositório."
+        print_error "Um ou mais arquivos do serviço de LEDs não foram encontrados! Certifique-se de executar o script da pasta raiz do repositório."
         exit 3
     fi
-    echo ">>> [1/6] Arquivos verificados."
+    print_success "[1/6] Arquivos do serviço de LEDs verificados."
 
-    echo ">>> [2/6] Copiando script de LEDs ($CONFIG_FONTE1)..."
+    print_step "[2/6] Copiando script de monitoramento de LEDs ('$CONFIG_FONTE1')"
     sudo cp "$CONFIG_FONTE1" "$CONFIG_DESTINO1"
-    echo ">>> [2/6] Script de LEDs copiado."
+    print_success "[2/6] Script de LEDs copiado para '$CONFIG_DESTINO1'."
 
-    echo ">>> [3/6] Copiando .service do serviço de LEDs ($CONFIG_FONTE2)..."
+    print_step "[3/6] Copiando arquivo de serviço systemd para LEDs ('$CONFIG_FONTE2')"
     sudo cp "$CONFIG_FONTE2" "$CONFIG_DESTINO2"
-    echo ">>> [3/6] .service de LEDs copiado."
+    print_success "[3/6] Arquivo .service de LEDs copiado para '$CONFIG_DESTINO2'."
 
-    echo ">>> [4/6] Copiando script de desligamento ($CONFIG_FONTE5)..."
+    print_step "[4/6] Copiando script de desligamento dos LEDs ('$CONFIG_FONTE5')"
     sudo cp "$CONFIG_FONTE5" "$CONFIG_DESTINO5"
-    echo "    INFO: O script 'shutdown_pins.sh' garante que os LEDs sejam desligados corretamente durante o reboot ou shutdown."
-    echo "    AVISO: Devido à configuração padrão do Raspberry Pi, algum LED pode acender brevemente antes do boot completo. Isso é normal e corrigido após o início do sistema."
-    echo ">>> [4/6] Script de desligamento copiado."
+    print_info "O script 'shutdown_pins.sh' garante que os LEDs sejam desligados corretamente durante o reboot ou shutdown."
+    print_warning "Devido à configuração padrão do Raspberry Pi, alguns LEDs podem acender brevemente durante o boot. Isso é normal e será corrigido após o início completo do sistema."
+    print_success "[4/6] Script de desligamento dos LEDs copiado para '$CONFIG_DESTINO5'."
 
-    echo ">>> [5/6] Copiando script de delay/animação da rede ($CONFIG_FONTE6)..."
+    print_step "[5/6] Copiando script de delay/animação da rede (com LEDs) ('$CONFIG_FONTE6')"
     sudo cp "$CONFIG_FONTE6" "$CONFIG_DESTINO6"
-    echo "    INFO: O script 'rede-delay.sh' (versão com LEDs) inclui animações indicando o status do boot e da rede."
-    echo ">>> [5/6] Script de delay da rede copiado."
+    print_info "O script 'rede-delay.sh' (versão com LEDs) inclui animações indicando o status do boot e da rede."
+    print_success "[5/6] Script de delay da rede (com LEDs) copiado para '$CONFIG_DESTINO6'."
 
-    echo ">>> [6/6] Configurando permissões e serviços..."
+    print_step "[6/6] Configurando permissões e ativando o serviço de LEDs"
     sudo chmod +x "$CONFIG_DESTINO1"
     sudo chmod +x "$CONFIG_DESTINO5"
-    sudo chmod +x "$CONFIG_DESTINO6" # Garante que o rede-delay seja executável
-    echo "    Scripts definidos como executáveis."
+    sudo chmod +x "$CONFIG_DESTINO6"
+    print_info "Permissões de execução concedidas aos scripts."
     sudo systemctl daemon-reload
-    echo "    Systemd daemon recarregado."
-    sudo systemctl enable pinctrl-monitor
-    sudo systemctl start pinctrl-monitor
-    echo ">>> [6/6] Serviço de LEDs habilitado e iniciado."
-    echo ">>> Instalação do Serviço de LEDs concluída."
+    print_info "Systemd daemon recarregado."
+    sudo systemctl enable pinctrl-monitor.service
+    sudo systemctl start pinctrl-monitor.service
+    if systemctl is-active --quiet pinctrl-monitor.service; then
+        print_success "[6/6] Serviço de LEDs habilitado e iniciado com sucesso."
+    else
+        print_error "[6/6] Falha ao iniciar o serviço de LEDs. Verifique o status com 'systemctl status pinctrl-monitor.service'."
+    fi
+    print_success "Instalação do Serviço de LEDs concluída."
     echo
 fi
 
-# --- Instalação do Serviço de Ventoinha (se escolhido) ---
-
+# --- Instalação do Serviço de Ventoinha ---
 if [ "$INSTALL_FAN" = true ]; then
-    echo "============================================="
-    echo " Iniciando a Instalação do Serviço de Ventoinha"
-    echo "============================================="
+    print_section_header "Instalando Serviço de Ventoinha"
 
     CONFIG_FONTE3="$REPO_ROOT/scripts/personalizadas/fan_on/temp-monitor.sh"
     CONFIG_DESTINO3="/usr/local/bin/temp-monitor.sh"
     CONFIG_FONTE4="$REPO_ROOT/scripts/personalizadas/fan_on/temp-monitor.service"
     CONFIG_DESTINO4="/etc/systemd/system/temp-monitor.service"
 
-    echo ">>> [1/4] Verificando arquivos necessários..."
+    print_step "[1/4] Verificando arquivos necessários para o serviço de ventoinha"
     if [ ! -f "$CONFIG_FONTE3" ] || [ ! -f "$CONFIG_FONTE4" ]; then
-        echo "    ERRO: Um ou mais arquivos do serviço de ventoinha não foram encontrados! Certifique-se de executar da pasta do repositório."
+        print_error "Um ou mais arquivos do serviço de ventoinha não foram encontrados! Certifique-se de executar o script da pasta raiz do repositório."
         exit 3
     fi
-    echo ">>> [1/4] Arquivos verificados."
+    print_success "[1/4] Arquivos do serviço de ventoinha verificados."
 
-    echo ">>> [2/4] Copiando script da Ventoinha ($CONFIG_FONTE3)..."
+    print_step "[2/4] Copiando script de monitoramento de temperatura ('$CONFIG_FONTE3')"
     sudo cp "$CONFIG_FONTE3" "$CONFIG_DESTINO3"
-    echo ">>> [2/4] Script de Ventoinha copiado."
+    print_success "[2/4] Script de ventoinha copiado para '$CONFIG_DESTINO3'."
 
-    echo ">>> [3/4] Copiando .service do serviço de ventoinha ($CONFIG_FONTE4)..."
+    print_step "[3/4] Copiando arquivo de serviço systemd para ventoinha ('$CONFIG_FONTE4')"
     sudo cp "$CONFIG_FONTE4" "$CONFIG_DESTINO4"
-    echo ">>> [3/4] .service de ventoinha copiado."
+    print_success "[3/4] Arquivo .service de ventoinha copiado para '$CONFIG_DESTINO4'."
 
-    echo ">>> [4/4] Configurando permissões e serviços..."
+    print_step "[4/4] Configurando permissões e ativando o serviço de ventoinha"
     sudo chmod +x "$CONFIG_DESTINO3"
-    echo "    Script definido como executável."
+    print_info "Permissão de execução concedida ao script."
     sudo systemctl daemon-reload
-    echo "    Systemd daemon recarregado."
-    sudo systemctl enable temp-monitor
-    sudo systemctl start temp-monitor
-    echo ">>> [4/4] Serviço de Ventoinha habilitado e iniciado."
-    echo ">>> Instalação do Serviço de Ventoinha concluída."
+    print_info "Systemd daemon recarregado."
+    sudo systemctl enable temp-monitor.service
+    sudo systemctl start temp-monitor.service
+    if systemctl is-active --quiet temp-monitor.service; then
+        print_success "[4/4] Serviço de Ventoinha habilitado e iniciado com sucesso."
+    else
+        print_error "[4/4] Falha ao iniciar o serviço de ventoinha. Verifique o status com 'systemctl status temp-monitor.service'."
+    fi
+    print_success "Instalação do Serviço de Ventoinha concluída."
     echo
 fi
 
 # --- Instalação do Restante da Solução ---
-
 if ask_yes_no "Deseja prosseguir com a instalação do restante da solução (serviços web, backend, configurações de rede)?"; then
-    echo
-    echo "================================================="
-    echo " Iniciando a Instalação do Restante da Solução"
-    echo "================================================="
+    print_section_header "Instalando o Restante da Solução"
 
-    # Copia o rede-delay padrão SE os LEDs não foram instalados
+    # Copia script rede-delay.sh padrão SE LEDs NÃO foram instalados
     if [ "$INSTALL_LEDS" = false ]; then
-        echo ">>> Copiando script 'rede-delay.sh' padrão (sem LEDs)..."
-        CONFIG_FONTE7="$REPO_ROOT/scripts/padrao/rede-delay.sh"
+        print_step "Copiando script 'rede-delay.sh' padrão (sem LEDs)..."
+        CONFIG_FONTE7="$REPO_ROOT/scripts/personalizadas/rede-delay.sh"
         CONFIG_DESTINO7="/usr/local/bin/rede-delay.sh"
         if [ ! -f "$CONFIG_FONTE7" ]; then
-            echo "    ERRO: Arquivo '$CONFIG_FONTE7' não encontrado!"
-            exit 3
+            print_error "Arquivo '$CONFIG_FONTE7' (rede-delay.sh padrão) não encontrado!"
+            # Considerar se deve sair ou apenas avisar e continuar
+        else
+            sudo cp "$CONFIG_FONTE7" "$CONFIG_DESTINO7"
+            sudo chmod +x "$CONFIG_DESTINO7"
+            print_success "Script 'rede-delay.sh' padrão copiado e definido como executável."
         fi
-        sudo cp "$CONFIG_FONTE7" "$CONFIG_DESTINO7"
-        sudo chmod +x "$CONFIG_DESTINO7"
-        echo ">>> Script 'rede-delay.sh' padrão copiado e definido como executável."
     fi
 
-    # Lista de arquivos e destinos para cópia
-    declare -A FILES_TO_COPY
-    FILES_TO_COPY=(
-        ["$REPO_ROOT/scripts/personalizadas/painel_http.service"]="/etc/systemd/system/painel_http.service"
-        ["$REPO_ROOT/scripts/personalizadas/backendc1.service"]="/etc/systemd/system/backendc1.service"
-        ["$REPO_ROOT/configuracoes/personalizadas/nodogsplash.conf"]="/etc/nodogsplash/nodogsplash.conf"
-        ["$REPO_ROOT/configuracoes/personalizadas/hostapd.conf"]="/etc/hostapd/hostapd.conf" # CORRIGIDO: Assumindo destino correto
-        ["$REPO_ROOT/configuracoes/personalizadas/090_wlan0.conf"]="/etc/dnsmasq.d/090_wlan0.conf"
-        ["$REPO_ROOT/web/nodogsplash/splash.html"]="/etc/nodogsplash/htdocs/splash.html"
-        ["$REPO_ROOT/web/nodogsplash/status.html"]="/etc/nodogsplash/htdocs/status.html"
-    )
-
-    # Copiando arquivos de configuração e web
-    for FONTE in "${!FILES_TO_COPY[@]}"; do
-        DESTINO=${FILES_TO_COPY[$FONTE]}
-        echo ">>> Copiando $FONTE para $DESTINO..."
-        if [ ! -f "$FONTE" ]; then
-            echo "    ERRO: Arquivo '$FONTE' não encontrado!"
-            # Poderia adicionar 'continue' ou 'exit 4' dependendo da criticidade
-        else
-            # Cria o diretório de destino se não existir (para /etc/nodogsplash/htdocs/ e /etc/hostapd/ por exemplo)
-            sudo mkdir -p "$(dirname "$DESTINO")"
-            sudo cp "$FONTE" "$DESTINO"
-            echo "    Copiado com sucesso."
-        fi
-    done
-
-    # Habilitando e iniciando serviços
-    echo ">>> Habilitando e iniciando painel_http..."
-    sudo systemctl enable painel_http
-    sudo systemctl start painel_http
-
-    echo ">>> Habilitando e iniciando backendc1..."
-    sudo systemctl enable backendc1
-    sudo systemctl start backendc1
-
-    # Movendo sistema_presenca e compilando
-    CONFIG_FONTE10="$REPO_ROOT/sistema_presenca"
-    CONFIG_DESTINO10="/etc"
-    echo ">>> Movendo $CONFIG_FONTE10 para $CONFIG_DESTINO10..."
-    if [ ! -d "$CONFIG_FONTE10" ]; then
-         echo "    ERRO: Diretório '$CONFIG_FONTE10' não encontrado!"
-         exit 5
+    # Script nds_log_params.sh
+    print_step "Copiando script 'nds_log_params.sh'..."
+    CONFIG_FONTE11="$REPO_ROOT/scripts/personalizadas/nds_log_params.sh"
+    CONFIG_DESTINO11="/usr/local/bin/nds_log_params.sh"
+    if [ -f "$CONFIG_FONTE11" ]; then
+        sudo cp "$CONFIG_FONTE11" "$CONFIG_DESTINO11"
+        sudo chmod +x "$CONFIG_DESTINO11"
+        print_success "Script 'nds_log_params.sh' copiado e configurado."
+    else
+        print_warning "Arquivo '$CONFIG_FONTE11' não encontrado. Pulando esta etapa."
     fi
-    sudo mv "$CONFIG_FONTE10" "$CONFIG_DESTINO10"
-    echo "    Movido com sucesso."
 
-    echo ">>> Compilando código C em /etc/sistema_presenca/codigo-c..."
-    if [ -d "/etc/sistema_presenca/codigo-c" ]; then
-        (cd /etc/sistema_presenca/codigo-c && sudo make) # Executa em subshell para não perder o diretório
-        if [ $? -eq 0 ]; then
-            echo "    Compilado com sucesso."
+    # Arquivos do Nodogsplash htdocs
+    print_step "Copiando arquivos de interface do Nodogsplash (splash.html, status.html)..."
+    CONFIG_FONTE13="$REPO_ROOT/web/nodogsplash/splash.html"
+    CONFIG_DESTINO13="/etc/nodogsplash/htdocs/splash.html"
+    CONFIG_FONTE14="$REPO_ROOT/web/nodogsplash/status.html"
+    CONFIG_DESTINO14="/etc/nodogsplash/htdocs/status.html"
+
+    if [ -f "$CONFIG_FONTE13" ]; then
+        sudo cp "$CONFIG_FONTE13" "$CONFIG_DESTINO13"
+        print_success "Arquivo 'splash.html' copiado para '$CONFIG_DESTINO13'."
+    else
+        print_warning "Arquivo '$CONFIG_FONTE13' não encontrado. Pulando."
+    fi
+    if [ -f "$CONFIG_FONTE14" ]; then
+        sudo cp "$CONFIG_FONTE14" "$CONFIG_DESTINO14"
+        print_success "Arquivo 'status.html' copiado para '$CONFIG_DESTINO14'."
+    else
+        print_warning "Arquivo '$CONFIG_FONTE14' não encontrado. Pulando."
+    fi
+
+    # Configuração Nodogsplash
+    print_step "Aplicando configuração do Nodogsplash ('nodogsplash.conf')..."
+    CONFIG_FONTE12="$REPO_ROOT/configuracoes/personalizadas/nodogsplash.conf"
+    CONFIG_DESTINO12="/etc/nodogsplash/nodogsplash.conf"
+    if [ -f "$CONFIG_FONTE12" ]; then
+        sudo cp "$CONFIG_FONTE12" "$CONFIG_DESTINO12"
+        print_success "Arquivo 'nodogsplash.conf' copiado para '$CONFIG_DESTINO12'."
+        print_step "Reiniciando Nodogsplash para aplicar configurações..."
+        if sudo systemctl restart nodogsplash; then
+            print_success "Nodogsplash reiniciado com sucesso."
         else
-            echo "    ERRO: Falha na compilação do código C."
-            # Poderia adicionar 'exit 6'
+            print_error "Falha ao reiniciar Nodogsplash. Verifique o status com 'systemctl status nodogsplash'."
         fi
     else
-        echo "    AVISO: Diretório /etc/sistema_presenca/codigo-c não encontrado, pulando compilação."
+        print_warning "Arquivo '$CONFIG_FONTE12' não encontrado. Pulando configuração do Nodogsplash."
     fi
 
-    echo
-    echo "================================================="
-    echo " Instalação do Restante da Solução Concluída"
-    echo "================================================="
-    echo
+    # Serviço Painel HTTP
+    print_step "Configurando serviço do Painel HTTP ('painel_http.service')..."
+    CONFIG_FONTE15="$REPO_ROOT/scripts/personalizadas/painel_http.service"
+    CONFIG_DESTINO15="/etc/systemd/system/painel_http.service"
+    if [ -f "$CONFIG_FONTE15" ]; then
+        sudo cp "$CONFIG_FONTE15" "$CONFIG_DESTINO15"
+        print_success "Arquivo 'painel_http.service' copiado para '$CONFIG_DESTINO15'."
+    else
+        print_warning "Arquivo '$CONFIG_FONTE15' não encontrado. Pulando configuração do Painel HTTP."
+    fi
 
+    # Serviço Backend C1
+    print_step "Configurando serviço do Backend C1 ('backendc1.service')..."
+    CONFIG_FONTE16="$REPO_ROOT/scripts/personalizadas/backendc1.service"
+    CONFIG_DESTINO16="/etc/systemd/system/backendc1.service"
+    if [ -f "$CONFIG_FONTE16" ]; then
+        sudo cp "$CONFIG_FONTE16" "$CONFIG_DESTINO16"
+        print_success "Arquivo 'backendc1.service' copiado para '$CONFIG_DESTINO16'."
+    else
+        print_warning "Arquivo '$CONFIG_FONTE16' não encontrado. Pulando configuração do Backend C1."
+    fi
+
+    # Sistema de Presença
+    print_step "Movendo e compilando Sistema de Presença..."
+    CONFIG_FONTE17="$REPO_ROOT/sistema_presenca"
+    CONFIG_DESTINO17_PARENT="/etc/" # Diretório pai onde a pasta será movida
+    CONFIG_DESTINO17_FINAL="/etc/sistema_presenca" # Caminho final após mover
+
+    if [ -d "$CONFIG_FONTE17" ]; then
+        # Remove o diretório de destino se já existir para evitar erro no mv
+        if [ -d "$CONFIG_DESTINO17_FINAL" ]; then
+            print_info "Removendo diretório existente '$CONFIG_DESTINO17_FINAL' antes de mover o novo."
+            sudo rm -rf "$CONFIG_DESTINO17_FINAL"
+        fi
+        sudo mv "$CONFIG_FONTE17" "$CONFIG_DESTINO17_PARENT"
+        print_success "Pasta 'sistema_presenca' movida para '$CONFIG_DESTINO17_PARENT'."
+
+        if [ -d "$CONFIG_DESTINO17_FINAL/codigo-c" ]; then
+            print_step "Compilando código C do Sistema de Presença..."
+            # Salva o diretório atual e muda para o diretório do make
+            CURRENT_DIR_MAKE=$(pwd)
+            cd "$CONFIG_DESTINO17_FINAL/codigo-c/"
+            if sudo make; then
+                print_success "Código C do Sistema de Presença compilado com sucesso."
+            else
+                print_error "Falha ao compilar o código C do Sistema de Presença. Verifique as mensagens do 'make'."
+            fi
+            cd "$CURRENT_DIR_MAKE" # Retorna ao diretório original
+        else
+            print_warning "Diretório '$CONFIG_DESTINO17_FINAL/codigo-c' não encontrado. Compilação do código C pulada."
+        fi
+    else
+        print_warning "Pasta '$CONFIG_FONTE17' não encontrada. Pulando instalação do Sistema de Presença."
+    fi
+
+    # Habilitar e Iniciar Serviços (Painel HTTP e Backend C1)
+    print_step "Habilitando e iniciando serviços do Painel HTTP e Backend C1..."
+    sudo systemctl daemon-reload # Recarregar caso novos .service tenham sido adicionados
+    if [ -f "$CONFIG_DESTINO15" ]; then # Verifica se o arquivo de serviço existe antes de tentar habilitar/iniciar
+        sudo systemctl enable painel_http.service
+        if sudo systemctl start painel_http.service; then
+            print_success "Serviço 'painel_http.service' habilitado e iniciado."
+        else
+            print_error "Falha ao iniciar 'painel_http.service'. Verifique com 'systemctl status painel_http.service'."
+        fi
+    else
+        print_warning "Serviço 'painel_http.service' não foi copiado, portanto não será habilitado/iniciado."
+    fi
+
+    if [ -f "$CONFIG_DESTINO16" ]; then # Verifica se o arquivo de serviço existe
+        sudo systemctl enable backendc1.service
+        if sudo systemctl start backendc1.service; then
+            print_success "Serviço 'backendc1.service' habilitado e iniciado."
+        else
+            print_error "Falha ao iniciar 'backendc1.service'. Verifique com 'systemctl status backendc1.service'."
+        fi
+    else
+        print_warning "Serviço 'backendc1.service' não foi copiado, portanto não será habilitado/iniciado."
+    fi
+
+    # Configuração Hostapd e reinício de serviços de rede
+    print_step "Aplicando configuração do Hostapd ('hostapd.conf')..."
+    CONFIG_FONTE18="$REPO_ROOT/configuracoes/personalizadas/hostapd.conf"
+    CONFIG_DESTINO18="/etc/hostapd/hostapd.conf"
+    if [ -f "$CONFIG_FONTE18" ]; then
+        sudo cp "$CONFIG_FONTE18" "$CONFIG_DESTINO18"
+        print_success "Arquivo 'hostapd.conf' copiado para '$CONFIG_DESTINO18'."
+        print_step "Reiniciando serviços de rede (hostapd, dnsmasq, nodogsplash)..."
+        if sudo systemctl restart hostapd && sudo systemctl restart dnsmasq && sudo systemctl restart nodogsplash; then
+            print_success "Serviços de rede reiniciados com sucesso."
+        else
+            print_error "Falha ao reiniciar um ou mais serviços de rede. Verifique o status individualmente."
+        fi
+    else
+        print_warning "Arquivo '$CONFIG_FONTE18' não encontrado. Pulando configuração do Hostapd."
+    fi
+
+    print_success "Instalação do restante da solução concluída."
+    echo
 else
     echo
-    echo ">>> Instalação do restante da solução foi cancelada pelo usuário."
+    print_info "Instalação do restante da solução foi CANCELADA pelo usuário."
     echo
 fi
 

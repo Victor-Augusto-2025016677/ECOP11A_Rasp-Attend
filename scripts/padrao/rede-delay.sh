@@ -17,3 +17,5 @@ systemctl restart dnsmasq
 systemctl restart hostapd
 
 systemctl restart nodogsplash
+
+exit 0

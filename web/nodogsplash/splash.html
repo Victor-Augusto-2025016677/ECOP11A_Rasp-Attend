@@ -103,56 +103,38 @@
     const erroSpan = document.getElementById("erro");
 
     form.addEventListener("submit", function (e) {
-      // Limpa erros anteriores
       erroSpan.textContent = "";
 
-      // Validação do nome (simples, apenas para verificar se não está vazio)
       if (nomeInput.value.trim() === "") {
-        e.preventDefault(); // Impede o envio do formulário
         erroSpan.textContent = "Por favor, insira seu nome.";
         nomeInput.focus();
         return;
       }
 
-      // Validação da matrícula
       const matriculaValue = matriculaInput.value;
-      // A validação de 10 dígitos e de ser numérico pode ser feita pelo atributo 'pattern' e 'maxlength' do HTML5,
-      // mas uma verificação adicional em JS é uma boa prática.
       if (!/^\d{10}$/.test(matriculaValue)) {
-        e.preventDefault(); // Impede o envio do formulário
+        e.preventDefault();
         erroSpan.textContent = "Matrícula deve ter 10 dígitos numéricos.";
         matriculaInput.focus();
         return;
       }
 
-      // Validação do ano da matrícula (opcional, mas você tinha antes)
       const ano = parseInt(matriculaValue.slice(0, 4), 10);
       const anoAtual = new Date().getFullYear();
 
-      if (isNaN(ano) || ano > anoAtual || ano < 1913) { // Ajuste o ano mínimo conforme necessário
-        e.preventDefault(); // Impede o envio do formulário
+      if (isNaN(ano) || ano > anoAtual || ano < 2000) {
+        e.preventDefault();
         erroSpan.textContent = "Ano de matrícula inválido (primeiros 4 dígitos).";
         matriculaInput.focus();
         return;
       }
-
-      // Se todas as validações passarem, o formulário será enviado NATURALMENTE via GET.
-      // Não é necessário e.preventDefault() aqui nem fetch.
-      // O navegador construirá a URL com nome_usuario, numero_usuario, tok e redir.
-      // Exemplo de mensagem de sucesso (opcional, pois a página será redirecionada)
-      // erroSpan.textContent = "Registrando... Por favor, aguarde.";
-      // erroSpan.style.color = "#baffba"; // Verde para sucesso
     });
-
-    // Limpar erro ao digitar na matrícula
     matriculaInput.addEventListener("input", function () {
-      // Limpa o erro específico da matrícula se o usuário começar a corrigir
       if (erroSpan.textContent.includes("Matrícula") || erroSpan.textContent.includes("Ano")) {
         erroSpan.textContent = "";
       }
     });
 
-    // Limpar erro ao digitar no nome
     nomeInput.addEventListener("input", function () {
       if (erroSpan.textContent.includes("nome")) {
         erroSpan.textContent = "";

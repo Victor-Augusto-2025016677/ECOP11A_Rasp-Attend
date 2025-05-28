@@ -8,7 +8,6 @@ ExecStart=/usr/local/bin/temp-monitor.sh
 Restart=always
 RestartSec=10
 Type=simple
-ExecStop=/usr/local/bin/shutdown_pins.sh
 
 [Install]
 WantedBy=multi-user.target
