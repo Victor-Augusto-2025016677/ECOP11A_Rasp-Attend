@@ -27,7 +27,21 @@ sudo reboot
 
 ```
 
-2. Clonagem do repositório
+2. Configuração de Localização
+
+Para que o sistema do Raspberry não desative o uso de wlan por segurança, é necessário a configuração de sua localização, para isso, execute:
+
+```bash
+
+sudo raspi-config
+
+```
+
+Vá para "Localisation Options", wlan set, e defina BR.
+Após isso, basta dar "finish" na interface após a confirmação da alteração.
+
+
+3. Clonagem do repositório
 
 Para a realização da instalação, será necessário a clonagem deste repositório, recomenda-se que seja clonado na pasta home de seu usuário, mas, poderá ser realizado em qualquer outro local. Para a realização, execute o seguinte comando:
 
@@ -39,7 +53,7 @@ cd ./ECOP11A_Rasp-Attend
 
 ```
 
-3. Instalação Inicial - Configurações Padrão (Obrigatório)
+4. Instalação Inicial - Configurações Padrão (Obrigatório)
 
 Nesta seção, iremos realizar a instalação manipulada o RaspAP (responsável pelo Acess Point), e do Nodogsplash (Responsável pela Página de login)
 
@@ -60,7 +74,7 @@ Após a conclusão, o sistema irá se comportar com as definições padrão do R
 
 *Infelizmente a documentação oficial do "Nodogsplash" se encontra indisponivel, para a realização de consultas parciais, recomendo o uso de Modelos LLM treinados antes de sua indisponibilidade (GPT, Gemini, Claude e etc)
 
-4. Aplicação da personalização central
+5. Aplicação da personalização central
 
 Este comando, irá realizar toda a instalação da personalização realizada por mim, ela consiste em página de login com recolhimento de nome e número de matrícula, scripts e services para a hospedagem local http, e a solução em Ansi C para a manipulação de csv's e outras implicações para o funcionamento do código. 
 
