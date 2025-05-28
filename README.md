@@ -69,4 +69,8 @@ Este comando, irá realizar toda a instalação da personalização realizada po
 sudo ./install_personalizacao.sh
 
 ```
-### **Em andamento**
+
+## Finalização:
+
+Após a instalação, o sistema estará operacional, caso ocorra algum problema, entre em contato comigo através do e-mail:
+d2025016677@unifei.edu.br
